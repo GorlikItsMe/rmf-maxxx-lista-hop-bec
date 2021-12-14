@@ -1,10 +1,10 @@
 name: Update playlist cron
 
 on:
+  push:
+    branches:
+      - master
   schedule:
-    - push:
-      branches:
-        - master
     - cron: "0 19 * * *"
 
 jobs:
