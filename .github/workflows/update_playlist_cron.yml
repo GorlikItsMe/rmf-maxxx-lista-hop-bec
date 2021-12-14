@@ -1,0 +1,27 @@
+name: Update playlist cron
+
+on:
+  schedule:
+    - cron: "0 19 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content to github runner.
+
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7 #install the python needed
+
+      - name: Update playlist
+        run: |
+          python rmfmaxxx_hopbec.py
+        env:
+          PLAYLIST_ID: ${{ secrets.PLAYLIST_ID }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          CODE: ${{ secrets.CODE }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
