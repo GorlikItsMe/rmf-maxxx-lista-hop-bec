@@ -123,7 +123,8 @@ def ClearList():
         if(lis.status_code != 200):
             print(lis)
             print(lis.text)
-            print("Nie udalo sie pobrac playlist")
+            print("Nie udalo sie pobrac playlisty")
+            raise Exception("Nie udalo sie pobrac playlisty")
 
         video_list = lis.json()["items"]
         for vid in video_list:
@@ -133,6 +134,7 @@ def ClearList():
             if(r.status_code != 204):
                 print(r.text)
                 print("Nie udalo sie usunac pozycji z playlisty")
+                raise Exception("Nie udalo sie usunac pozycji z playlisty")
 
         if len(video_list) == 0:
             break
