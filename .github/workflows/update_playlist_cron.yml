@@ -2,6 +2,9 @@ name: Update playlist cron
 
 on:
   schedule:
+    - push:
+      branches:
+        - master
     - cron: "0 19 * * *"
 
 jobs:
@@ -15,7 +18,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7 #install the python needed
-      
+
       - name: Install requirements.txt
         run: |
           pip install -r requirements.txt

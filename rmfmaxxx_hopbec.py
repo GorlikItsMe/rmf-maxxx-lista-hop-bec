@@ -117,19 +117,26 @@ def SearchForVideo(search):
 
 def ClearList():
     print("Usuwam Playliste")
-    lis = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=id&maxResults=100&playlistId=' +
-                       PLAYLIST_ID+'&key='+CLIENT_SECRET, headers=headers)
-    if(lis.status_code != 200):
-        print(lis)
-        print(lis.text)
-        print("Nie udalo sie pobrac playlist")
-    for vid in lis.json()["items"]:
-        vid_id = vid["id"]
-        r = requests.delete('https://www.googleapis.com/youtube/v3/playlistItems?id=' +
-                            vid_id+'&key='+CLIENT_SECRET, headers=headers)
-        if(r.status_code != 204):
-            print(r.text)
-            print("Nie udalo sie usunac pozycji z playlisty")
+    while True:
+        lis = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=id&maxResults=100&playlistId=' +
+                           PLAYLIST_ID+'&key='+CLIENT_SECRET, headers=headers)
+        if(lis.status_code != 200):
+            print(lis)
+            print(lis.text)
+            print("Nie udalo sie pobrac playlist")
+
+        video_list = lis.json()["items"]
+        for vid in video_list:
+            vid_id = vid["id"]
+            r = requests.delete('https://www.googleapis.com/youtube/v3/playlistItems?id=' +
+                                vid_id+'&key='+CLIENT_SECRET, headers=headers)
+            if(r.status_code != 204):
+                print(r.text)
+                print("Nie udalo sie usunac pozycji z playlisty")
+
+        if len(video_list) == 0:
+            break
+
     print("Zakończono czyszczenie playlisty")
     time.sleep(10)
 
