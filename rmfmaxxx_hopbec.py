@@ -8,10 +8,12 @@ from os import getenv
 
 load_dotenv()
 
+PLAYLIST_ID = getenv("PLAYLIST_ID")
+CLIENT_ID = getenv("CLIENT_ID")
 CLIENT_SECRET = getenv("CLIENT_SECRET")
 ACCESS_TOKEN = getenv("ACCESS_TOKEN")
 REFRESH_TOKEN = getenv("REFRESH_TOKEN")
-PLAYLIST_ID = getenv("PLAYLIST_ID")
+
 headers = {}
 
 
