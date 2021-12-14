@@ -117,11 +117,10 @@ def SearchForVideo(search):
 
 def ClearList():
     print("Usuwam Playliste")
-    while True:
+    for _ in range(3):
         lis = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=id&maxResults=100&playlistId=' +
                            PLAYLIST_ID+'&key='+CLIENT_SECRET, headers=headers)
         if(lis.status_code != 200):
-            print(lis)
             print(lis.text)
             print("Nie udalo sie pobrac playlisty")
             raise Exception("Nie udalo sie pobrac playlisty")
@@ -135,7 +134,7 @@ def ClearList():
                 print(r.text)
                 print("Nie udalo sie usunac pozycji z playlisty")
                 raise Exception("Nie udalo sie usunac pozycji z playlisty")
-
+            print(f"Delete {vid_id}")
         if len(video_list) == 0:
             break
 
@@ -152,8 +151,11 @@ def refreshOAuth2():
     }
 
     r = requests.post('https://accounts.google.com/o/oauth2/token', data=data)
-    return r.json()["access_token"]
-
+    try:
+        return r.json()["access_token"]
+    except Exception as e:
+        print(r.text)
+        raise e
 
 if __name__ == '__main__':
     main()
