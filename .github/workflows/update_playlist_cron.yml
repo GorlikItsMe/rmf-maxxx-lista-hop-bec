@@ -1,6 +1,7 @@
 name: Update playlist cron
 
 on:
+  push:
   schedule:
     - cron: "0 19 * * *"
 
