@@ -33,7 +33,7 @@ def main():
     r = requests.post("https://www.googleapis.com/oauth2/v4/token",
                       headers=headers, data=data)
     print("do .env dopisz\n")
-    refresh_token = r.text['refresh_token']
+    refresh_token = r.json()['refresh_token']
     print(f"REFRESH_TOKEN={refresh_token}")
 
 

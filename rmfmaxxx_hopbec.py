@@ -133,7 +133,7 @@ def ClearList():
             if(r.status_code != 204):
                 print(r.text)
                 print("Nie udalo sie usunac pozycji z playlisty")
-                raise Exception("Nie udalo sie usunac pozycji z playlisty")
+                continue
             print(f"Delete {vid_id}")
         if len(video_list) == 0:
             break
