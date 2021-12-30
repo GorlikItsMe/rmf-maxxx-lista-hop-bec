@@ -23,10 +23,6 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Install requirements.txt
-        run: |
-          pip install -r requirements.txt
-
       - name: Update playlist
         run: |
           python rmfmaxxx_hopbec.py
