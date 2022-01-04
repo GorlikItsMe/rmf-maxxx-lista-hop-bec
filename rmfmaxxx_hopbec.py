@@ -30,7 +30,7 @@ def main():
 
     soup = bs.BeautifulSoup(r.text, 'lxml')
     title = soup.find('div', attrs={'class': 'content-page'}).find('h2')
-    nr = title.find_all('b')[1].text
+    nr = title.find_all('b')[-1].text
     full_title = title.text
 
     print(full_title)
