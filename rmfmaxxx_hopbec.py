@@ -20,8 +20,9 @@ headers = {}
 def main():
     global headers
     ACCESS_TOKEN = refreshOAuth2()
+
     headers = {
-        'Authorization': 'Bearer '+ACCESS_TOKEN+'',
+        'Authorization': f'Bearer {ACCESS_TOKEN}',
         'Accept': 'application/json',
         'Content-Type': 'application/json',
     }
@@ -73,12 +74,23 @@ def getYoutubeLink(link):
 
 
 def UpdatePlaylist(name, desc):
-    data = {"id": PLAYLIST_ID, "snippet": {"title": name,
-                                           "description": desc}, "status": {"privacyStatus": "public"}}
+    data = {
+        "id": PLAYLIST_ID,
+        "snippet": {
+            "title": name,
+            "description": desc
+        },
+        "status": {
+            "privacyStatus": "public"
+        }
+    }
     data = json.dumps(data)
 
-    r = requests.put('https://www.googleapis.com/youtube/v3/playlists?part=snippet%2Cstatus&key=' +
-                     CLIENT_SECRET, headers=headers, data=data)
+    r = requests.put(
+        url=f'https://www.googleapis.com/youtube/v3/playlists?part=snippet%2Cstatus&key={CLIENT_SECRET}',
+        headers=headers,
+        data=data
+    )
     if(r.status_code == 200):
         print(f"Changed playlist:\n title:\t{name}\n description:\t{desc}")
     else:
@@ -90,8 +102,11 @@ def InsertToPlaylist(videoId, position=0):
     data = {"snippet": {"playlistId": PLAYLIST_ID, "resourceId": {
         "kind": "youtube#video", "videoId": videoId}, "position": position}}
     data = json.dumps(data)
-    r = requests.post('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2Cstatus&key=' +
-                      CLIENT_SECRET, headers=headers, data=data)
+    r = requests.post(
+        url=f'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet%2Cstatus&key={CLIENT_SECRET}',
+        headers=headers,
+        data=data
+    )
     if(r.status_code == 200):
         print(f"[+] position: {position}\t videoId: {videoId}")
     else:
@@ -102,13 +117,15 @@ def InsertToPlaylist(videoId, position=0):
 
 def SearchForVideo(search):
     search = urllib.parse.quote(search)
-    r = requests.get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=' +
-                     search+'&key='+CLIENT_SECRET, headers=headers)
+    r = requests.get(
+        url=f'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q={search}&key={CLIENT_SECRET}',
+        headers=headers
+    )
     if(r.status_code == 200):
         vid = r.json()["items"][0]
         code = vid['id']['videoId']
         print(f"Searching for `{search}` and found video {code}")
-        return "https://www.youtube.com/watch?v="+code
+        return f"https://www.youtube.com/watch?v={code}"
     else:
         print(r.text)
         print("SearchForVideo FAIL", search)
@@ -118,8 +135,10 @@ def SearchForVideo(search):
 def ClearList():
     print("Usuwam Playliste")
     for _ in range(3):
-        lis = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=id&maxResults=100&playlistId=' +
-                           PLAYLIST_ID+'&key='+CLIENT_SECRET, headers=headers)
+        lis = requests.get(
+            url=f'https://www.googleapis.com/youtube/v3/playlistItems?part=id&maxResults=100&playlistId={PLAYLIST_ID}&key={CLIENT_SECRET}',
+            headers=headers
+        )
         if(lis.status_code != 200):
             print(lis.text)
             print("Nie udalo sie pobrac playlisty")
@@ -128,8 +147,10 @@ def ClearList():
         video_list = lis.json()["items"]
         for vid in video_list:
             vid_id = vid["id"]
-            r = requests.delete('https://www.googleapis.com/youtube/v3/playlistItems?id=' +
-                                vid_id+'&key='+CLIENT_SECRET, headers=headers)
+            r = requests.delete(
+                url=f'https://www.googleapis.com/youtube/v3/playlistItems?id={vid_id}&key={CLIENT_SECRET}',
+                headers=headers
+            )
             if(r.status_code != 204):
                 print(r.text)
                 print("Nie udalo sie usunac pozycji z playlisty")
@@ -151,11 +172,10 @@ def refreshOAuth2():
     }
 
     r = requests.post('https://accounts.google.com/o/oauth2/token', data=data)
-    try:
-        return r.json()["access_token"]
-    except Exception as e:
-        print(r.text)
-        raise e
+    if r.status_code == 400:
+        raise Exception("REFRESH_TOKEN has ben expired or revoked")
+    return r.json()["access_token"]
+
 
 if __name__ == '__main__':
     main()
