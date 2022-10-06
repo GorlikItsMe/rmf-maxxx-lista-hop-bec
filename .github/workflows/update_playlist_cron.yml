@@ -3,7 +3,7 @@ name: Update playlist cron
 on:
   push:
     branches:
-      - master
+      - not_existing_branch
 # Wyłączyłem cron bo zmieniono wygląd strony i już nie działa poprawnie
 #on:
 #  schedule:
