@@ -1,3 +1,5 @@
+# Skrypt nie działa ponieważ zmieniono wygląd strony.
+
 # rmf-maxxx-lista-hop-bec
 
 Automatyczne parsowanie listy hop bec i akutalizowanie playlisty na youtube
