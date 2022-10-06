@@ -1,8 +1,13 @@
 name: Update playlist cron
 
 on:
-  schedule:
-    - cron: "0 19 * * *"
+  push:
+    branches:
+      - master
+# Wyłączyłem cron bo zmieniono wygląd strony i już nie działa poprawnie
+#on:
+#  schedule:
+#    - cron: "0 19 * * *"
 
 jobs:
   update_yt_playlist:
